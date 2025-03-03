@@ -1,0 +1,23 @@
+name: mpc_case_study
+root: ./
+startup_window: crazyflies_start
+pre_window: |
+  source <%= @settings["setup_name"] %>
+windows:
+  - crazyflies_start:
+      layout: tiled
+      panes:
+        - ros2_ws;source_ros2;cd scripts; history -s "python3 ai_streamer.py"
+        - ros2_ws;source_ros2; history -s  "ros2 launch crazyflie_examples keyboard_velmux_launch.py"
+        - ros2_ws;source_ros2;cd scripts; history -s  "python3 main.py 2>/dev/null"
+        - ros2_ws;source_ros2; history -s  "ros2 run octomap_server octomap_server_node --ros-args -p frame_id:=world -p octomap_path:=/root/diplomski/data/run2_octomap.bt"
+        
+
+  # - ros1_bridge:
+  #     layout: tiled
+  #     panes:
+  #       - source_ros;sleep 10;ros2_ws; ros2 run ros1_bridge dynamic_bridge --bridge-all-topics
+  #       - source_ros; roscore
+  #       - source_ros; history -s "rostopic list"
+  #       - ros2_ws;source_ros2; ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+ 
