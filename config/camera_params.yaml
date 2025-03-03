@@ -1,0 +1,33 @@
+name: cf231
+camera:  
+  image_topic: /camera/image
+  camera_info_topic: /camera/camera_info
+  deck_ip: "192.168.4.1"
+  deck_port: 5000
+  image_width: 324
+  image_height: 324
+  camera_name: crazyflie
+  frame_id: world
+  camera_matrix:
+    rows: 3
+    cols: 3
+    data: [181.87464,   0.     , 162.52301,
+            0.     , 182.58129, 160.79418,
+            0.     ,   0.     ,   1.     ]
+  distortion_model: plumb_bob
+  distortion_coefficients:
+    rows: 1
+    cols: 5
+    data: [-0.070366, -0.006434, -0.002691, -0.001983, 0.000000]
+  rectification_matrix:
+    rows: 3
+    cols: 3
+    data: [1., 0., 0.,
+          0., 1., 0.,
+          0., 0., 1.]
+  projection_matrix:
+    rows: 3
+    cols: 4
+    data: [169.24555,   0.     , 161.54541,   0.     ,
+            0.     , 169.97813, 159.07974,   0.     ,
+            0.     ,   0.     ,   1.     ,   0.     ]
