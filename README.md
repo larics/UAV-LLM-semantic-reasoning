@@ -50,7 +50,11 @@ export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 ## Installation & Running
 
-The repository is to be clonned as it is outside of the CrazySim (simulation) or CrazySwarm (real world) packages. ROS2 workspace and ROS2 should be sourced before running the code. A bash script that runs Tmuxinator with needed terminals is provided:
+The repository is to be clonned as it is outside of the CrazySim (simulation) or CrazySwarm (real world) packages. 
+ROS2 workspace and ROS2 should be sourced before running the code. 
+Models and the sdf file used in the simulation can be downloaded [here](https://drive.google.com/file/d/15_DUEFOr0VFzXhRMFV648gFY7OKM_s3a/view?usp=sharing).
+
+A bash script that runs Tmuxinator with needed terminals is provided:
 
 #### Simulation
 
@@ -71,3 +75,11 @@ cd run_realworld
 - Add yolo_ros_msgs folder to interfaces and compile the ROS2 workspace again
 - ChatGPT API key needs to be added in LLM_tools.py script
 - Change topic names according to Crazyflie name
+- comment out rclpy.init() in crazyswarm_py.py script in crazyswarm2 folder
+
+Video results of testing in the simulation and real world can be found in the documentation folder.
+
+## Future work
+
+- Research the possibilities of VLMs
+- More diverse testing and benchmark results
