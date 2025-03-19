@@ -1,4 +1,5 @@
 yolov8m.pt
 __pycache__
 cache
+temp_trajectory_scan.csv
 chatgpt_credentials.yaml
