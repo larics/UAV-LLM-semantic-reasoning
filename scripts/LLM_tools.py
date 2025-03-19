@@ -6,10 +6,10 @@ import yaml
 
 
 def describe_space(objects_dict):
-    with open("~/UAV-control-using-semantics-and-LLM/config/chatgpt_credentials.yaml", "r") as file:
+    with open("/root/UAV-control-using-semantics-and-LLM/config/chatgpt_credentials.yaml", "r") as file:
         data = yaml.safe_load(file)
 
-    openai.api_key = data[api_key]
+    openai.api_key = data['api_key']
 
     objects_dict = {k: [v2.tolist() for v2 in v] for k, v in objects_dict.items()}
     objects_json_str = json.dumps(objects_dict)
@@ -54,10 +54,9 @@ def describe_space(objects_dict):
     
 
 def define_target_object(input_description):
-    with open("~/UAV-control-using-semantics-and-LLM/config/chatgpt_credentials.yaml", "r") as file:
+    with open("/root/UAV-control-using-semantics-and-LLM/config/chatgpt_credentials.yaml", "r") as file:
         data = yaml.safe_load(file)
-
-    openai.api_key = data[api_key]
+    openai.api_key = data['api_key']
 
     messages = [
     {
@@ -101,10 +100,10 @@ def define_target_object(input_description):
     
 
 def decide_movement(objects_dict, target_description):
-    with open("~/UAV-control-using-semantics-and-LLM/config/chatgpt_credentials.yaml", "r") as file:
+    with open("/root/UAV-control-using-semantics-and-LLM/config/chatgpt_credentials.yaml", "r") as file:
         data = yaml.safe_load(file)
 
-    openai.api_key = data[api_key]
+    openai.api_key = data['api_key']
 
     objects_dict = {k: [v2.tolist() for v2 in v] for k, v in objects_dict.items()}
     objects_json_str = json.dumps(objects_dict)
