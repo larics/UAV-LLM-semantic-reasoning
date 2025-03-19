@@ -1,0 +1,18 @@
+- ros_topic_name: "cf_1/camera_info"
+  gz_topic_name: "cf_0/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "ignition.msgs.CameraInfo"
+  subscriber_queue: 10      # Default 10
+  publisher_queue: 10        # Default 10
+  lazy: false                # Default "false"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "cf_1/image"
+  gz_topic_name: "cf_0/camera"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "ignition.msgs.Image"
+  subscriber_queue: 10      # Default 10
+  publisher_queue: 10        # Default 10
+  lazy: false                # Default "false"
+  direction: GZ_TO_ROS
+
