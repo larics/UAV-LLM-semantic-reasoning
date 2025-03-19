@@ -7,9 +7,9 @@ windows:
   - crazyflies_start:
       layout: tiled
       panes:
-        - ros2_ws;source_ros2;cd scripts; history -s "python3 ai_streamer.py"
         - ros2_ws;source_ros2; history -s  "ros2 launch crazyflie_examples keyboard_velmux_launch.py"
-        - ros2_ws;source_ros2;cd scripts; history -s  "python3 main.py 2>/dev/null"
+        - ros2_ws;source_ros2;cd ~/UAV-control-using-semantics-and-LLM/scripts; history -s "python3 ai_streamer.py"
+        - ros2_ws;source_ros2;cd ~/UAV-control-using-semantics-and-LLM/scripts; history -s  "python3 main.py 2>/dev/null"
         - ros2_ws;source_ros2; history -s  "ros2 run octomap_server octomap_server_node --ros-args -p frame_id:=world -p octomap_path:=/root/diplomski/data/run2_octomap.bt"
         
 
