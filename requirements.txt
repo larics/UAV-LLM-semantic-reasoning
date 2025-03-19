@@ -1,6 +1,4 @@
 cv-bridge==3.2.1
-octomap-msgs==2.0.1
-octomap-python==1.8.0.post11
 openai==1.63.0
 opencv-python==4.11.0.86
 scikit-build==0.18.1
@@ -12,6 +10,3 @@ torchaudio==2.6.0
 torchvision==0.21.0
 ultralytics==8.3.75
 ultralytics-thop==2.0.14
-trimesh==3.8.11
-cython==0.29.25
-setuptools==58.0.0
