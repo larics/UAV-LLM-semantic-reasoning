@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(yolov7_ros_msgs)
+project(yolo_ros_msgs)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)

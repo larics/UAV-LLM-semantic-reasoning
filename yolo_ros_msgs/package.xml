@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>yolov7_ros_msgs</name>
+  <name>yolo_ros_msgs</name>
   <version>1.0.0</version>
-  <description>Interfaces for yolov7 package.</description>
+  <description>Interfaces for yolo.</description>
   <maintainer email="maleticmarin@gmail.com">Marin Maletic</maintainer>
   <license>FER</license>
 
