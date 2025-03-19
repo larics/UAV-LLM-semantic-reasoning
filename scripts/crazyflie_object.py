@@ -29,7 +29,7 @@ class CrazyflieObject(Node):
         self.trajTimer = TrajTimer(self)
         self.pose = PoseStamped().pose
         self.path = Path()
-        self.path.header.frame_id = 'world'
+        self.path.header.frame_id = 'map'
 
         self.publish_cast = publish_cast
         self.publish_hits = publish_hits
@@ -141,13 +141,13 @@ class CrazyflieObject(Node):
         # ---- Publish the points as pointcloud
         if len(direction_points) > 0 and self.publish_cast:
             cat_points = np.concatenate(direction_points, axis=0)
-            pc2_msg = xyz_array_to_pointcloud2(self, cat_points, frame_id='world')
+            pc2_msg = xyz_array_to_pointcloud2(self, cat_points, frame_id='map')
             self.pub_cast.publish(pc2_msg)
 
         # ---- Publish the hits as pointcloud
         if len(hit_points) > 0 and self.publish_hits:
             hits_xyz = np.array(hit_points, dtype=np.float32)
-            pc2_hits_msg = xyz_array_to_pointcloud2(self, hits_xyz, frame_id='world')
+            pc2_hits_msg = xyz_array_to_pointcloud2(self, hits_xyz, frame_id='map')
             self.pub_hits.publish(pc2_hits_msg)
 
 
