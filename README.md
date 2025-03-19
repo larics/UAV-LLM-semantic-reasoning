@@ -42,8 +42,12 @@ pip install -r requirements.txt
 Install OctoMap for Python:
 
 ```bash
-apt-get install libqt5opengl5-dev libqt5svg5-dev cmake
+apt-get install libqt5opengl5-dev libqt5svg5-dev cmake 
 sudo apt-get install libdynamicedt3d-dev
+pip install trimesh==3.8.11
+pip install cython==0.29.25
+pip install setuptools==58.0.0
+pip install --upgrade "numpy>=1.17.3,<1.25.0"
 CXXFLAGS="-std=c++11" pip install octomap-python==1.8.0.post11
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 ```
