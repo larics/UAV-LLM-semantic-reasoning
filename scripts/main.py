@@ -196,6 +196,6 @@ def main(yaml_path, octomap_path):
 
 
 if __name__ == "__main__":
-    yaml_path = "/root/diplomski/config/camera_params.yaml"
-    octomap_path = "/root/diplomski/data/crazysim_octomap.bt"
+    yaml_path = "~/UAV-control-using-semantics-and-LLM/config/camera_params.yaml"
+    octomap_path = "~/UAV-control-using-semantics-and-LLM/data/crazysim_octomap.bt"
     main(yaml_path, octomap_path)
