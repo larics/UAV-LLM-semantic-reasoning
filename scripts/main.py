@@ -83,11 +83,12 @@ def main(yaml_path, octomap_path):
     space_scanning = False
     search_withouth_LLM = True
     first_pass = True
-    interesting_object_thread = [False, [0,0,0]]
+    interesting_object_thread = [False, [0,0,0], ""]
     visited = {}
     timer = Timer()
 
-    ''' Start '''
+
+    ''' __START__ '''
     target_description = "Where is my banana?"
     target_class, _ = define_target_object(target_description)
     print(f"The target object is a {target_class}")
@@ -196,6 +197,6 @@ def main(yaml_path, octomap_path):
 
 
 if __name__ == "__main__":
-    yaml_path = "~/UAV-control-using-semantics-and-LLM/config/camera_params.yaml"
-    octomap_path = "~/UAV-control-using-semantics-and-LLM/data/crazysim_octomap.bt"
+    yaml_path = "/root/UAV-control-using-semantics-and-LLM/config/camera_params.yaml"
+    octomap_path = "/root/UAV-control-using-semantics-and-LLM/data/crazysim_octomap.bt"
     main(yaml_path, octomap_path)
