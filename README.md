@@ -74,14 +74,64 @@ cd run_realworld
 ./start_tmux.sh
 ```
 
-**Before running the code:**
+### Before running the code:
 
-- Add yolo_ros_msgs folder to interfaces and compile the ROS2 workspace again
-- ChatGPT API key needs to be added in LLM_tools.py script
+- Add *yolo_ros_msgs* folder to *ros2_ws/src* folder and compile the ROS2 workspace again
+- Your ChatGPT API key needs to be added in */config/chatgpt_credentials.yaml* file
 - Change topic names according to Crazyflie name
-- comment out rclpy.init() in crazyswarm_py.py script in crazyswarm2 folder
+- Copy Rviz configuration *config/config.rviz* to *ros2_ws/src/crazyswarm2/crazyflie/config*
+- Comment out rclpy.init() in crazyswarm_py.py script in *crazyswarm2/crazyflie_py/crazyflie_py* folder
+- Add the camera sensor to the crazyflie model in the simulation
 
-Video results of testing in the simulation and real world can be found in the documentation folder.
+**Adding a camera to the crazyflie model:**
+1. Add the camera plugin to */root/CrazySim/crazyflie-firmware/tools/crazyflie-simulation/simulator_files/gazebo/models/crazyflie/model.sdf.jinja*, under the IMU sensor at line 52:
+
+```bash
+    <sensor name="camera_sensor" type="camera"> 
+        <camera>
+            <horizontal_fov>1.5184</horizontal_fov>
+            <image>
+                <width>324</width>
+                <height>324</height>
+            </image>
+            <clip>
+                <near>0.1</near>
+                <far>100</far>
+            </clip>
+        </camera>
+        <always_on>1</always_on>
+        <update_rate>30</update_rate>
+        <visualize>true</visualize>
+        <topic>/cf_{{ cf_id }}/camera</topic>
+    </sensor>
+```
+
+2. Copy *gz_bridge.yaml* from the config folder to *ros2_ws/src/crazyswarm2/crazyflie/config*
+3. Add the bridge node to *parse_yaml* function in *ros2_ws/src/crazyswarm2/crazyflie/launch/launch.py*:
+
+```bash
+gz_bridge_yaml = os.path.join(
+        get_package_share_directory('crazyflie'),
+        'config',
+        'gz_bridge.yaml')
+ 
+# Append the bridge node to the return value
+        Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            output='screen',
+            parameters = [{'config_file': gz_bridge_yaml}]
+            )
+```
+
+## Results
+Video results of the simulation and realworld testing of different scenarios can be found in the __documentation folder__. Below is one example of the algorithm working where the task is to find a **computer mouse**:
+
+[![Video Title](https://img.youtube.com/vi/_r-umRlyUrg/0.jpg)](https://youtu.be/_r-umRlyUrg)
+
+In the terminal in the lower part of the screen, informations about the search are displayed. 
+
+The initial scan sees a computer monitor but no mouse, so LLM concludes that the computer mouse could be close to the monitor. Then it conducts a search around it which results with the computer mouse being found.
 
 ## Future work
 
