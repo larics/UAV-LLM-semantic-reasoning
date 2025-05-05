@@ -249,4 +249,4 @@ def plot_2d_xy_clusters(class_centers, min_point, max_point, ground_truth):
 if __name__ == "__main__":
     csv_file = "my_3dpath_trajectory.csv" 
     dt = 0.01  # time step for sampling
-    plot_trajectory_from_csv("temp_trajectory_to_circle.csv")
+    plot_trajectory_from_csv("temp_trajectory_scan.csv")

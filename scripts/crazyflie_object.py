@@ -20,7 +20,7 @@ from timer_tool import TrajTimer
 from crazyflie_py import *
 
 class CrazyflieObject(Node):
-    def __init__(self, yaml_path,  octree, target_class='couch', publish_cast=False, publish_hits=False, publish_path=True):
+    def __init__(self, yaml_path,  octree, target_class, timer, publish_cast=False, publish_hits=False, publish_path=True):
         super().__init__('crazyflie_object')
 
         self.swarm = Crazyswarm()
@@ -64,6 +64,7 @@ class CrazyflieObject(Node):
         self.started_traj = False
         self.first_pass = True
         self.counter = 0
+        self.timer = timer
     
 
     def pose_callback(self, msg):
@@ -169,8 +170,9 @@ class CrazyflieObject(Node):
                     y_coord = round(class_centers[class_name][0][1], 2)
                     z_coord = round(class_centers[class_name][0][2], 2)
                     print("{} found at x: {} y: {} z: {}".format(class_name, x_coord, y_coord, z_coord))
+                    self.timer.__exit__()
+                    print(f"Total distance: {self.total_distance(self.path):.2f}")
                     return True
-        #print("not found")
         return False
 
 
@@ -217,6 +219,29 @@ class CrazyflieObject(Node):
         return class_centers
 
 
+    def total_distance(self, path_msg):
+        length = 0.0
+        poses = path_msg.poses
+        # Need at least 2 poses to have a segment
+        if len(poses) < 2:
+            return length
+
+        # Iterate over pose pairs
+        for prev_ps, curr_ps in zip(poses, poses[1:]):
+            x1 = prev_ps.pose.position.x
+            y1 = prev_ps.pose.position.y
+            z1 = prev_ps.pose.position.z
+
+            x2 = curr_ps.pose.position.x
+            y2 = curr_ps.pose.position.y
+            z2 = curr_ps.pose.position.z
+
+            dx = x2 - x1
+            dy = y2 - y1
+            dz = z2 - z1
+
+            length += math.sqrt(dx*dx + dy*dy + dz*dz)
+        return length
 
 if __name__ == '__main__':
     main()

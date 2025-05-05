@@ -18,6 +18,8 @@ from LLM_tools import describe_space, decide_movement, define_target_object
 
 from crazyflie_object import *
 from crazyflie_py.uav_trajectory import Trajectory
+import math
+
 
 
 TAKEOFF_DURATION = 5.0
@@ -70,8 +72,9 @@ def LLM_schedule_call(interval, interesting_object_thread, cf, decide_movement, 
             interesting_object_thread[1] = obj_coord
             interesting_object_thread[2] = object_name
             break
-            
-    
+
+
+############################################################################################      
 
 def main(yaml_path, octomap_path):    
     rclpy.init()
@@ -79,7 +82,8 @@ def main(yaml_path, octomap_path):
     octree = OctoMap()
     octree.load_octomap(octomap_file)
     
-    object_searching = True
+    LLM_searching = False
+    LLM_searching = True
     space_scanning = False
     search_withouth_LLM = True
     first_pass = True
@@ -88,14 +92,19 @@ def main(yaml_path, octomap_path):
     timer = Timer()
 
 
-    ''' __START__ '''
-    target_description = "Where is my banana?"
+    ''' ______START_______ '''
+
+    #target_description = "I am craving a banana. I think I saw some in the dining area."
+    target_description = "I cant find my computer mouse."
+    #target_description = "I cant sleep without my toy zebra."
+
+    print(f"User: {target_description}")
     target_class, _ = define_target_object(target_description)
     print(f"The target object is a {target_class}")
-    scan_height = 2.5   # Height on which the wall is scanned
+    scan_height = 2.4   # Height on which the wall is scanned
     
     try:
-        cf = CrazyflieObject(yaml_path, octree, target_class)
+        cf = CrazyflieObject(yaml_path, octree, target_class, timer)
         centroid, min_point, max_point, wall_points = get_wall_and_center(octree.octree, scan_height)
         cf.space_scanning = space_scanning
 
@@ -106,8 +115,8 @@ def main(yaml_path, octomap_path):
         cf.timeHelper.sleep(TAKEOFF_DURATION + HOVER_DURATION)   
 
         while not cf.object_found:
-            if object_searching:
-                timer.__enter__()
+            if LLM_searching:
+                cf.timer.__enter__()
                 if first_pass:
                     first_pass = False
                     cf.searching_flag = True
@@ -115,16 +124,17 @@ def main(yaml_path, octomap_path):
                     end_search = cf.check_for_object(target_class)
                     if end_search: 
                         cf.object_found = True
-                        timer.__exit__()
+                        #timer.__exit__()
                         break
                     class_centers = cf.cluster_and_average()
+
+                    start = time.time()
                     interesting_object_flag, object_name, obj_coord, explanation = decide_movement(class_centers, target_description)
-                    #print(class_centers)
-                    #print(interesting_object_flag)
-                    #print(explanation)
-                    #print(object_name, obj_coord)
+                    end = time.time()
+                    print(f"LLM reasoning time: {end - start:.4f} seconds")
+
                     if interesting_object_flag:
-                        do_thorough_search(cf, SPEED, TIMESCALE, object_name, obj_coord, min_point, max_point, higher=1.0, radius=2.0, wall_clearance=1.0, visualize=False)
+                        do_thorough_search(cf, SPEED, TIMESCALE, object_name, obj_coord, min_point, max_point, higher=1.0, radius=2.0, wall_clearance=1.5, visualize=False)
                         if object_name not in visited:
                             visited[object_name] = []
                         visited[object_name].append(obj_coord)
@@ -143,12 +153,11 @@ def main(yaml_path, octomap_path):
                 
                 do_initial_scan(cf, octree, SPEED, TIMESCALE, scan_height, scan_type='wall', visualize=False)
                 if cf.object_found:
-                    timer.__exit__()
+                    #timer.__exit__()
                     break
                 if interesting_object_thread[0]:
                     scheduler_thread.join()
-                    interesting_object_thread = [False, [0,0,0]]
-                    do_thorough_search(cf, SPEED, TIMESCALE, interesting_object_thread[2], interesting_object_thread[1], min_point, max_point, higher=1.0, radius=2.5, wall_clearance=1.0, visualize=False)
+                    do_thorough_search(cf, SPEED, TIMESCALE, interesting_object_thread[2], interesting_object_thread[1], min_point, max_point, higher=1.5, radius=2.0, wall_clearance=1.5, visualize=False)
                     end_search = cf.check_for_object(target_class)
                     if end_search: 
                         cf.object_found = True
@@ -174,13 +183,18 @@ def main(yaml_path, octomap_path):
                     first_pass = False
                     cf.searching_flag = True
                     first_lookaround(cf)
+                    end_search = cf.check_for_object(target_class)
+                    if end_search: 
+                        cf.object_found = True
+                        timer.__exit__()
+                        break
                     
-                do_initial_scan(cf, octree, SPEED, TIMESCALE, scan_height, scan_type='wall', visualize=False)
-                timer.__exit__()
+                do_initial_scan(cf, octree, SPEED, TIMESCALE, scan_height, scan_type='lawn mower', visualize=False)
                 break
 
 
         print("Done successfully!")
+        
         cf.drone.land(targetHeight=0.04, duration=3)
         cf.timeHelper.sleep(TAKEOFF_DURATION+3.0)
 

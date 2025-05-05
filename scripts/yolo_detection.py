@@ -15,7 +15,7 @@ class ImageStreamerNode(Node):
     def __init__(self):
         super().__init__("image_node")
 
-        self.model = YOLO("yolov8m.pt")
+        self.model = YOLO("yolo11l.pt")
         self.model.to("cuda")
 
         # Change some class labels for our case
@@ -48,12 +48,12 @@ class ImageStreamerNode(Node):
                 # Draw bounding box
                 cv2.rectangle(cv_image, (x1, y1), (x2, y2), (0, 255, 0), 1)
                 cv2.putText(cv_image, f"{label}", (x1, y1 - 5),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.40, (0, 255, 0), 1)
 
                 # Draw a dot at the center of the detection
                 # cv2.circle(cv_image, (center_x, center_y), radius=5, color=(0, 0, 255), thickness=-1)
 
-            cv2.imshow("YOLOv8 Detections", cv_image)
+            cv2.imshow("YOLO Detections", cv_image)
             cv2.waitKey(1)
 
             detection_msg = self.create_detection_msg(detections, img_msg)

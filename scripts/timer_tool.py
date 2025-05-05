@@ -19,7 +19,7 @@ class TrajTimer:
     def sleep_while_moving(self):
 
         prev = np.array(self.cf.get_position())
-        time.sleep(0.8)
+        time.sleep(1.0)
         curr = np.array(self.cf.get_position())
         if np.linalg.norm(prev - curr) > 0.1:
             self.sleep_while_moving()

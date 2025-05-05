@@ -126,9 +126,73 @@ def gen_wall_following_waypoints(cf, octree, height, scale_factor = 0.5):
 
     return wall_points_scaled, min_point, max_point, centroid3d
 
+def generate_lawnmower_waypoints(xp, yp, z, s=1.5, c=2.0, a=10.0, b=10.0):
+    # Define safe corners
+    corners = {
+        "bl": (c,       c      ),  # bottom-left
+        "tl": (c,       b - c  ),  # top-left
+        "br": (a - c,   c      ),  # bottom-right
+        "tr": (a - c,   b - c  )   # top-right
+    }
+
+    # Squared distance from a corner to (xp, yp)
+    def dist2(pt, qx, qy):
+        return (pt[0] - qx)**2 + (pt[1] - qy)**2
+
+    # Pick the corner nearest the initial position
+    start_key = min(corners, key=lambda k: dist2(corners[k], xp, yp))
+    sx, sy = corners[start_key]
+
+    # Determine sweep directions
+    bottom_to_top = (sy == c)
+    left_to_right = (sx == c)
+
+    waypoints = []
+    # Number of passes to cover the X span (a − 2c)
+    passes = int((a - 2*c) // s) + 1
+
+    for i in range(passes):
+        # X position along the sweep line
+        if left_to_right:
+            x = min(a - c, c + i * s)
+        else:
+            x = max(c, a - c - i * s)
+
+        # On each pass, sweep full Y span
+        if (i % 2 == 0) == bottom_to_top:
+            ys = (c, b - c)
+        else:
+            ys = (b - c, c)
+
+        # Append the two endpoints of this strip
+        for y in ys:
+            waypoints.append((x, y, z))
+    
+    return subdivide_path(waypoints)
+
+def subdivide_path(path, max_dist=3.0):
+    """
+    Subdivide any segment in 'path' longer than max_dist into smaller segments,
+    so that no consecutive points are more than max_dist apart.
+    """
+    subdivided = []
+    for (x1, y1, z1), (x2, y2, z2) in zip(path, path[1:]):
+        dx, dy, dz = x2 - x1, y2 - y1, z2 - z1
+        dist = math.sqrt(dx*dx + dy*dy + dz*dz)
+        # Number of subsegments
+        n = max(1, math.ceil(dist / max_dist))
+        for j in range(n):
+            t = j / n
+            subdivided.append((x1 + t*dx, y1 + t*dy, z1 + t*dz))
+    subdivided.append(path[-1])
+    return subdivided
+
+##########################################################################################
 
 def do_initial_scan(cf, octree, SPEED, TIMESCALE, scan_height, scan_type='circle', visualize=False):
     print(f"Beginning {scan_type} scan ...")
+    cf.drone.goTo(np.array([cf.pose.position.x, cf.pose.position.y, scan_height]), cf.camera_yaw, 3.0)
+    cf.timeHelper.sleep(3.0)
     if scan_type == 'circle':
         circle_scan, min_point, max_point, centroid = gen_circle_scan_waypoints(cf, octree.octree, scan_height)
         points_to_circle = np.array(a_star_path_planning(cf.get_position(), circle_scan[0], octree, resolution=0.25, max_iterations=int(10e6), clearance=0.2, step=0.1))
@@ -147,6 +211,16 @@ def do_initial_scan(cf, octree, SPEED, TIMESCALE, scan_height, scan_type='circle
         else:
             all_points = np.concatenate((points_to_wall[:-1], wall_scan), axis=0)
         all_points = np.concatenate((points_to_wall[:-1], wall_scan), axis=0)
+        yaw_direction = None
+
+    elif scan_type == 'lawn mower':
+        mower_scan = generate_lawnmower_waypoints(cf.get_position()[0], cf.get_position()[1], scan_height)
+        points_to_mower = np.array(a_star_path_planning(cf.get_position(), mower_scan[0], octree, resolution=0.25, max_iterations=int(10e6), clearance=0.2, step=0.1))
+        if points_to_mower.shape[0] == 1:
+            all_points = np.concatenate((points_to_mower, mower_scan), axis=0)
+        else:
+            all_points = np.concatenate((points_to_mower[:-1], mower_scan), axis=0)
+        all_points = np.concatenate((points_to_mower[:-1], mower_scan), axis=0)
         yaw_direction = None
 
     end_yaw = create_polynomial_trajectory_from_points(
@@ -177,10 +251,10 @@ def do_initial_scan(cf, octree, SPEED, TIMESCALE, scan_height, scan_type='circle
 
 def first_lookaround(cf):
     print("First scan around ...")
-    cf.drone.goTo(np.array([cf.pose.position.x, cf.pose.position.y, cf.pose.position.z]), cf.camera_yaw-1.6, 8.0)
-    cf.timeHelper.sleep(8.0)
-    cf.drone.goTo(np.array([cf.pose.position.x, cf.pose.position.y, cf.pose.position.z]), cf.camera_yaw+1.6, 8.0)
-    cf.timeHelper.sleep(8.0)
+    cf.drone.goTo(np.array([cf.pose.position.x, cf.pose.position.y, cf.pose.position.z]), cf.camera_yaw-3.0, 16.0)
+    cf.timeHelper.sleep(15.0)
+    cf.drone.goTo(np.array([cf.pose.position.x, cf.pose.position.y, cf.pose.position.z]), cf.camera_yaw-3.0, 16.0)
+    cf.timeHelper.sleep(16.0)
 
 
 def do_thorough_search(cf, SPEED, TIMESCALE, object_name, coordinates, min_point, max_point, higher, radius, wall_clearance, visualize):
@@ -230,5 +304,5 @@ def do_thorough_search(cf, SPEED, TIMESCALE, object_name, coordinates, min_point
 if __name__ == "__main__":
     height = 2.5
     centroid, min_point, max_point, wall_points = get_wall_and_center(octree.octree, height)
-    do_thorough_search(cf, SPEED, TIMESCALE, [9.02700043, 2.68869238, 1.04099998], min_point, max_point, higher=1.0, radius=2.0, wall_clearance=1.0, visualize=True)
+    #do_thorough_search(cf, SPEED, TIMESCALE, [9.02700043, 2.68869238, 1.04099998], min_point, max_point, higher=1.0, radius=2.0, wall_clearance=1.0, visualize=True)
     
