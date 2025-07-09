@@ -1,15 +1,19 @@
-# UAV-control-using-semantics-and-LLM
+# Spatial-Semantic Reasoning using Large Language Models for Efficient UAV Search Operations
 
 **Author:** Marin Maletić<br>
-**Date:** February 2025.<br>
+**Date:** February 2025<br>
+**Last Updated:** July 2025<br>
+
+This code accompanies the work in the ECMR 2025 paper "Spatial-Semantic Reasoning using Large Language Models for Efficient UAV Search Operations".
+If you find the work here useful in you own research, please cite the paper:
 
 ## Motivation
 
-The work presented here was done as a part of the Master's degree work titled **"Control of an Unmanned Aerial Vehicle for Object Detection in 3D Space Based on Spatial Semantics"** at Faculty of electrical engineering and computing, University of Zagreb.
+The original idea was developed as a part of the Master's degree work titled **"Control of an Unmanned Aerial Vehicle for Object Detection in 3D Space Based on Spatial Semantics"** at Faculty of electrical engineering and computing, University of Zagreb.
 
-The task was to create, present and implement a method of using *Large Language Models (LLM)* to reduce the time necessary to find the target object in a 3D space. YOLOv8 Object Detection and OctoMap are used to map detected objects and its 3D coordinates while LLM uses that information to create an understanding of the UAV and the space around it. The LLM then guides the search to a more logical direction than a random search.
+The task was to create, present and implement a method of using *Large Language Models (LLM)* to reduce the time necessary to find the target object in a 3D space. YOLO11 Object Detection and OctoMap are used to map detected objects and its 3D coordinates while LLM uses that information to create an understanding of the UAV and the space around it. The LLM then guides the search to a more logical direction than a random search.
 
-![Methodology](documentation/metoda.png)
+![Methodology](documentation/method.png)
 
 This repository contains all developed algorithms, code and the documentation.
 
@@ -33,10 +37,16 @@ Crazyflie 2.1; OptiTrack; Livox MID-360 LiDAR; Cartographer SLAM; CloudCompare; 
 - [CrazySwarm](https://crazyswarm.readthedocs.io/en/latest/) and [CrazySim](https://github.com/gtfactslab/CrazySim) package
 - Octomap of the space in .bt file format
 
+Clone the repository:
+
+```bash
+git clone https://github.com/larics/UAV-LLM-semantic-reasoning.git
+cd UAV-LLM-semantic-reasoning
+```
+
 Other dependencies can be installed with:
 
 ```bash
-cd UAV-control-using-semantics-and-LLM
 pip install -r requirements.txt
 ```
 Install OctoMap for Python:
