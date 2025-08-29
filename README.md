@@ -26,8 +26,8 @@ Crazyflie 2.1; OptiTrack; Livox MID-360 LiDAR; Cartographer SLAM; CloudCompare; 
 
 **This code was tested in Docker containers provided by [LARICS](https://github.com/larics)**
 
-- [CrazySim for simulation testing](https://github.com/larics/docker_files/tree/master/ros2/ros2-humble/crazyflies)
-- [CrazySwarm for real world experiments](https://github.com/larics/docker_files/tree/master/ros2/ros2-iron/crazyflies-real-world)
+- [CrazySim for simulation testing](https://github.com/larics/docker_files/tree/master/ros2/ros2-humble/crazyflies-sitl)
+- [CrazySwarm for real world experiments](https://github.com/larics/docker_files/tree/master/ros2/ros2-jazzy/crazyflies)
 
 ## Prerequisites
 
