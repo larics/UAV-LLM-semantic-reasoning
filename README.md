@@ -4,7 +4,7 @@
 **Date:** February 2025<br>
 **Last Updated:** July 2025<br>
 
-This code accompanies the work in the ECMR 2025 paper "Spatial-Semantic Reasoning using Large Language Models for Efficient UAV Search Operations".
+This code accompanies the work in the ECMR 2025 paper ["Spatial-Semantic Reasoning using Large Language Models for Efficient UAV Search Operations"](https://doi.org/10.1109/ECMR65884.2025.11163229). 
 If you find the work here useful in you own research, please cite the paper:
 
 ```
